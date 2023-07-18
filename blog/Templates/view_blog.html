@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  </head>
+  <body style="background-color: lightseagreen;">
+
+    <div class="card mx-auto" style="width: 34rem;">
+      {% if data.image_attached %}
+      <img src="{{ data.image_attached.url}}" alt="Blog image" class="card-img-top">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title"> Title : {{data.title}}</h5>
+        <h6 class="card-title"> Author : {{data.author}}</h5>
+        {% comment %} <h6 class="card-title"> Tags : {% for tag in data.tags %}{{ tag }}<br>{% endfor %}</h5> {% endcomment %}
+        <h6 class="card-title"> Tags : {% for i in data.tags.all %}{{ i }}<br>{% endfor %}</h5>
+        <p class="card-text"> {{data.description}} </p>
+        <p class="card-text"> {{data.content}} </p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+        {% if user == data.author or user.is_superuser %}
+        <a href= "{% url 'specific_blog_update' data.pk %}" class="btn btn-warning">Update</a>
+        <a href= "{% url 'specific_blog_del' data.pk %}" class="btn btn-danger">Delete</a>
+        {% comment %} wahtis data.pk here  {% endcomment %}
+        {% endif %}
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  </body>
+</html>

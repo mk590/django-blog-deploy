@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- owl-carousel min css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- owl-carousel theme css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <title>Blog Application</title>
+
+    <style>
+        .card{
+            background-color: aliceblue;
+        }
+        body{
+            background-color: lightseagreen;
+        }
+    </style>
+
+  </head>
+  <body>
+    
+        <div class="container-fluid my-5">
+            <h1 class="text-center fw-bold display-2">
+                Blogs
+                 <button type="submit" class="btn btn-secondary" style="float: right;">
+                    <a href="{% url 'form' %}" style="color:white"> New Blog </a>
+                    <br/>
+                </button> 
+                {% if user.is_authenticated %}
+                {% comment %} why the u of the user is small it should be capital {% endcomment %}
+                <span>Logged in as {{user.username}}</span>
+                <button type="submit" class="btn btn-secondary" style="float: right;">
+                   <a href="{% url 'logout' %}" style="color:white"> Logout</a>
+                   <br/>
+               </button> 
+               {%else%}
+                 <button type="submit" class="btn btn-secondary" style="float: right;">
+                    <a href="{% url 'login' %}" style="color:white"> Login </a>
+                    <br/>
+                </button> 
+                 <button type="submit" class="btn btn-secondary" style="float: right;">
+                    <a href="{% url 'register' %}" style="color:white"> Register </a>
+                    <br/>
+                </button> 
+                {%endif%}
+            </h1>
+            <div class="row mt-5">
+                <div class="owl-carousel owl-theme" data-blog>
+                    <!-- slides -->
+                    {% for blog in data %}
+                    <div class="item mb-4">
+                        <div class="card border-0">
+                            {% if blog.image_attached %}
+                            <img height="200px"class="card-img-top" src=" {{ blog.image_attached.url}}" alt="Card image cap">
+                            {% endif %}
+                            <div class="card-body">
+                                <h4 class="card-title">{{blog.title}}</h4>
+                                <p>{{blog.User}}</p>
+                                <p class="card-text"> {{blog.description}} </p>
+                                <p class="card-text"> {{blog.content}} </p>
+                                 <a class="btn btn-primary" href = "{% url 'specific_blog_view' blog.pk %}">View</a>
+                               
+                                 {% if user == blog.author or user.is_superuser %}
+                                 <a class="btn btn-primary" href = "{% url 'specific_blog_update' blog.pk %}">Update</a>
+                                <a class="btn btn-primary" href = "{% url 'specific_blog_del' blog.pk %}">Delete</a> 
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- cdn files -->
+
+    <!-- jquery min -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- owl-carousel min js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- init owl-carousel -->
+    <script >
+        
+        $('.owl-carousel').owlCarousel({
+            loop:false,
+            margin:10,
+            nav:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                600:{
+                    items:3
+                },
+                1000:{
+                    items:4
+                }
+            }
+        })
+
+    </script>
+  </body>
+</html>
+
+{% comment %} everywhere the urls and routing to the views is involved we have to mention the name of the path instead of the url or view name  ?? right ?? {% endcomment %}
